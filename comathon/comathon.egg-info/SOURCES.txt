@@ -1,0 +1,8 @@
+README.md
+pyproject.toml
+setup.py
+comathon/myfunctions.py
+comathon/comathon.egg-info/PKG-INFO
+comathon/comathon.egg-info/SOURCES.txt
+comathon/comathon.egg-info/dependency_links.txt
+comathon/comathon.egg-info/top_level.txt
