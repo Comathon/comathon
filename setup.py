@@ -8,8 +8,5 @@ setup(
     author_email='Comathon2020@gmail.com',
     description = 'test',
     py_modules = ["myfunctions"],
-    packages = find_packages(),
     package_dir = {'': 'comathon'},
-    url='https://github.com/Comathon/module'
-
     )
