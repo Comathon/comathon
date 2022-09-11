@@ -1,0 +1,12 @@
+LICENSE.rst
+README.md
+pyproject.toml
+setup.cfg
+setup.py
+src/myfunctions.py
+src/simple_addition.py
+src/comathon.egg-info/PKG-INFO
+src/comathon.egg-info/SOURCES.txt
+src/comathon.egg-info/dependency_links.txt
+src/comathon.egg-info/requires.txt
+src/comathon.egg-info/top_level.txt
