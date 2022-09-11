@@ -1,0 +1,9 @@
+Metadata-Version: 2.1
+Name: comathon
+Version: 0.0.4
+Summary: Comathon module for comathon.com website
+Home-page: https://github.com/Comathon/module
+Author: Comathon
+Author-email: Comathon2020@gmail.com
+License: MIT
+License-File: LICENSE.rst
