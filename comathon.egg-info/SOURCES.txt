@@ -1,0 +1,16 @@
+README.md
+setup.cfg
+setup.py
+comathon/__init__.py
+comathon/cmt_exchange.py
+comathon/cmt_quotation.py
+comathon/myfunctions.py
+comathon/simple_addition.py
+comathon/test_restAPI.py
+comathon.egg-info/PKG-INFO
+comathon.egg-info/SOURCES.txt
+comathon.egg-info/dependency_links.txt
+comathon.egg-info/requires.txt
+comathon.egg-info/top_level.txt
+comathon_test/__init__.py
+comathon_test/test_myfunctions.py
