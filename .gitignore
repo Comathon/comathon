@@ -5,3 +5,6 @@ src/comathon.egg-info/PKG-INFO
 src/comathon.egg-info/requires.txt
 src/comathon.egg-info/SOURCES.txt
 src/comathon.egg-info/top_level.txt
+dist/comathon-0.0.2-py3-none-any.whl
+dist/comathon-0.0.2.tar.gz
+dist/comathon-0.0.1-py3-none-any.whl
