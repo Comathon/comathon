@@ -1,3 +1,4 @@
+
 def addition():
     n = 5
     print("addition of two numbers")
@@ -7,7 +8,7 @@ def addition():
             value1 = int(a)
             value2 = int(b)
             break
-        except e:
+        except:
             print("re enter numbers" )
             
     sum = value1 + value2
