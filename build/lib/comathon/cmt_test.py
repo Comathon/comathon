@@ -60,7 +60,7 @@ def cmt_sell_market_order(ticker, amount):
         KRW_balance = upbit.get_balance()
         print(i['userid'], "Balance : ", KRW_balance)
                 
-        coin_balance = upbit.get_balance(ticker=)
+        coin_balance = upbit.get_balance(ticker)
         sell_coin = upbit.sell_market_order(ticker, coin_balance) ## Sell all balance
 
     return None
