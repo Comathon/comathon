@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='comathon',
-    version='0.0.7',
+    version='0.0.8',
     license='MIT',
     author="Comathon",
     author_email='Comathon2020@gmail.com',
@@ -10,7 +10,7 @@ setup(
     packages=find_packages(),
     # package_dir={'': 'src'},
     url='https://github.com/Comathon/module',
-    install_requires=['requests'],
+    install_requires=['requests', 'pyupbit'],
     
 )
 
