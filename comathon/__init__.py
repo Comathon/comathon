@@ -1,2 +1,5 @@
 # import requests
-print("Hello World")
+
+from .cmt_test import *
+
+print("Comathon Module Imported, GAZUA")
