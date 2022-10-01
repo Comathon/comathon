@@ -4,7 +4,7 @@ import pyupbit
 
 ## Buy Function
 
-def cmt_buy_market_order(ticker, amount):
+def buy_market_order(ticker, amount):
 
     url = "http://121.137.95.97:8889/BotWithinUserList?botid=BOT002"
     response = requests.get(url)
@@ -34,7 +34,7 @@ def cmt_buy_market_order(ticker, amount):
     return None
 
 
-def cmt_sell_market_order(ticker, amount):
+def sell_market_order(ticker, amount):
 
     url = "http://121.137.95.97:8889/BotWithinUserList?botid=BOT002"
     response = requests.get(url)
