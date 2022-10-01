@@ -6,6 +6,7 @@ pyupbit.exchange_api
 This module provides exchange api of the Upbit API.
 """
 
+import pyupbit
 import math
 import jwt          # PyJWT
 import re
@@ -331,274 +332,274 @@ class Upbit:
             return None
 
     #    주문 취소 접수
-    def cancel_order(self, uuid, contain_req=False):
-        """
-        주문 취소
-        :param uuid: 주문 함수의 리턴 값중 uuid
-        :param contain_req: Remaining-Req 포함여부
-        :return:
-        """
-        try:
-            url = "https://api.upbit.com/v1/order"
-            data = {"uuid": uuid}
-            headers = self._request_headers(data)
-            result = _send_delete_request(url, headers=headers, data=data)
-            if contain_req:
-                return result
-            else:
-                return result[0]
-        except Exception as x:
-            print(x.__class__.__name__)
-            return None
+    # def cancel_order(self, uuid, contain_req=False):
+    #     """
+    #     주문 취소
+    #     :param uuid: 주문 함수의 리턴 값중 uuid
+    #     :param contain_req: Remaining-Req 포함여부
+    #     :return:
+    #     """
+    #     try:
+    #         url = "https://api.upbit.com/v1/order"
+    #         data = {"uuid": uuid}
+    #         headers = self._request_headers(data)
+    #         result = _send_delete_request(url, headers=headers, data=data)
+    #         if contain_req:
+    #             return result
+    #         else:
+    #             return result[0]
+    #     except Exception as x:
+    #         print(x.__class__.__name__)
+    #         return None
 
 
     #     주문 
-    def buy_limit_order(self, ticker, price, volume, contain_req=False):
-        """
-        지정가 매수
-        :param ticker: 마켓 티커
-        :param price: 주문 가격
-        :param volume: 주문 수량
-        :param contain_req: Remaining-Req 포함여부
-        :return:
-        """
-        try:
-            url = "https://api.upbit.com/v1/orders"
-            data = {"market": ticker,
-                    "side": "bid",
-                    "volume": str(volume),
-                    "price": str(price),
-                    "ord_type": "limit"}
-            headers = self._request_headers(data)
-            result = _send_post_request(url, headers=headers, data=data)
-            if contain_req:
-                return result
-            else:
-                return result[0]
-        except Exception as x:
-            print(x.__class__.__name__)
-            return None
+    # def buy_limit_order(self, ticker, price, volume, contain_req=False):
+    #     """
+    #     지정가 매수
+    #     :param ticker: 마켓 티커
+    #     :param price: 주문 가격
+    #     :param volume: 주문 수량
+    #     :param contain_req: Remaining-Req 포함여부
+    #     :return:
+    #     """
+    #     try:
+    #         url = "https://api.upbit.com/v1/orders"
+    #         data = {"market": ticker,
+    #                 "side": "bid",
+    #                 "volume": str(volume),
+    #                 "price": str(price),
+    #                 "ord_type": "limit"}
+    #         headers = self._request_headers(data)
+    #         result = _send_post_request(url, headers=headers, data=data)
+    #         if contain_req:
+    #             return result
+    #         else:
+    #             return result[0]
+    #     except Exception as x:
+    #         print(x.__class__.__name__)
+    #         return None
 
-    def buy_market_order(self, ticker, price, contain_req=False):
-        """
-        시장가 매수
-        :param ticker: ticker for cryptocurrency
-        :param price: KRW
-        :param contain_req: Remaining-Req 포함여부
-        :return:
-        """
-        try:
-            url = "https://api.upbit.com/v1/orders"
-            data = {"market": ticker,  # market ID
-                    "side": "bid",  # buy
-                    "price": str(price),
-                    "ord_type": "price"}
-            headers = self._request_headers(data)
-            result = _send_post_request(url, headers=headers, data=data)
-            if contain_req:
-                return result
-            else:
-                return result[0]
-        except Exception as x:
-            print(x.__class__.__name__)
-            return None
+    # def buy_market_order(self, ticker, price, contain_req=False):
+    #     """
+    #     시장가 매수
+    #     :param ticker: ticker for cryptocurrency
+    #     :param price: KRW
+    #     :param contain_req: Remaining-Req 포함여부
+    #     :return:
+    #     """
+    #     try:
+    #         url = "https://api.upbit.com/v1/orders"
+    #         data = {"market": ticker,  # market ID
+    #                 "side": "bid",  # buy
+    #                 "price": str(price),
+    #                 "ord_type": "price"}
+    #         headers = self._request_headers(data)
+    #         result = _send_post_request(url, headers=headers, data=data)
+    #         if contain_req:
+    #             return result
+    #         else:
+    #             return result[0]
+    #     except Exception as x:
+    #         print(x.__class__.__name__)
+    #         return None
 
-    def sell_market_order(self, ticker, volume, contain_req=False):
-        """
-        시장가 매도 메서드
-        :param ticker: 가상화폐 티커
-        :param volume: 수량
-        :param contain_req: Remaining-Req 포함여부
-        :return:
-        """
-        try:
-            url = "https://api.upbit.com/v1/orders"
-            data = {"market": ticker,  # ticker
-                    "side": "ask",  # sell
-                    "volume": str(volume),
-                    "ord_type": "market"}
-            headers = self._request_headers(data)
-            result = _send_post_request(url, headers=headers, data=data)
-            if contain_req:
-                return result
-            else:
-                return result[0]
-        except Exception as x:
-            print(x.__class__.__name__)
-            return None
+    # def sell_market_order(self, ticker, volume, contain_req=False):
+    #     """
+    #     시장가 매도 메서드
+    #     :param ticker: 가상화폐 티커
+    #     :param volume: 수량
+    #     :param contain_req: Remaining-Req 포함여부
+    #     :return:
+    #     """
+    #     try:
+    #         url = "https://api.upbit.com/v1/orders"
+    #         data = {"market": ticker,  # ticker
+    #                 "side": "ask",  # sell
+    #                 "volume": str(volume),
+    #                 "ord_type": "market"}
+    #         headers = self._request_headers(data)
+    #         result = _send_post_request(url, headers=headers, data=data)
+    #         if contain_req:
+    #             return result
+    #         else:
+    #             return result[0]
+    #     except Exception as x:
+    #         print(x.__class__.__name__)
+    #         return None
 
-    def sell_limit_order(self, ticker, price, volume, contain_req=False):
-        """
-        지정가 매도
-        :param ticker: 마켓 티커
-        :param price: 주문 가격
-        :param volume: 주문 수량
-        :param contain_req: Remaining-Req 포함여부
-        :return:
-        """
-        try:
-            url = "https://api.upbit.com/v1/orders"
-            data = {"market": ticker,
-                    "side": "ask",
-                    "volume": str(volume),
-                    "price": str(price),
-                    "ord_type": "limit"}
-            headers = self._request_headers(data)
-            result = _send_post_request(url, headers=headers, data=data)
-            if contain_req:
-                return result
-            else:
-                return result[0]
-        except Exception as x:
-            print(x.__class__.__name__)
-            return None
+    # def sell_limit_order(self, ticker, price, volume, contain_req=False):
+    #     """
+    #     지정가 매도
+    #     :param ticker: 마켓 티커
+    #     :param price: 주문 가격
+    #     :param volume: 주문 수량
+    #     :param contain_req: Remaining-Req 포함여부
+    #     :return:
+    #     """
+    #     try:
+    #         url = "https://api.upbit.com/v1/orders"
+    #         data = {"market": ticker,
+    #                 "side": "ask",
+    #                 "volume": str(volume),
+    #                 "price": str(price),
+    #                 "ord_type": "limit"}
+    #         headers = self._request_headers(data)
+    #         result = _send_post_request(url, headers=headers, data=data)
+    #         if contain_req:
+    #             return result
+    #         else:
+    #             return result[0]
+    #     except Exception as x:
+    #         print(x.__class__.__name__)
+    #         return None
 
 
     #--------------------------------------------------------------------------
     # 출금
     #--------------------------------------------------------------------------
-    def get_withdraw_list(self, currency: str, contain_req=False):
-        """
-        출금 리스트 조회
-        :param currency: Currency 코드
-        :param contain_req: Remaining-Req 포함여부
-        :return:
-        """
-        try:
-            url = "https://api.upbit.com/v1/withdraws"
-            data = {"currency": currency}
-            headers = self._request_headers(data)
+    # def get_withdraw_list(self, currency: str, contain_req=False):
+    #     """
+    #     출금 리스트 조회
+    #     :param currency: Currency 코드
+    #     :param contain_req: Remaining-Req 포함여부
+    #     :return:
+    #     """
+    #     try:
+    #         url = "https://api.upbit.com/v1/withdraws"
+    #         data = {"currency": currency}
+    #         headers = self._request_headers(data)
 
-            result = _send_get_request(url, headers=headers, data=data)
-            if contain_req:
-                return result
-            else:
-                return result[0]
-        except Exception as x:
-            print(x.__class__.__name__)
-            return None
+    #         result = _send_get_request(url, headers=headers, data=data)
+    #         if contain_req:
+    #             return result
+    #         else:
+    #             return result[0]
+    #     except Exception as x:
+    #         print(x.__class__.__name__)
+    #         return None
 
+    # #     개별 출금 조회
+    # def get_individual_withdraw_order(self, uuid: str, currency: str, contain_req=False):
+    #     """
     #     개별 출금 조회
-    def get_individual_withdraw_order(self, uuid: str, currency: str, contain_req=False):
-        """
-        개별 출금 조회
-        :param uuid: 출금 UUID
-        :param currency: Currency 코드
-        :param contain_req: Remaining-Req 포함여부
-        :return:
-        """
-        try:
-            url = "https://api.upbit.com/v1/withdraw"
-            data = {"uuid": uuid, "currency": currency}
-            headers = self._request_headers(data)
-            result = _send_get_request(url, headers=headers, data=data)
-            if contain_req:
-                return result
-            else:
-                return result[0]
-        except Exception as x:
-            print(x.__class__.__name__)
-            return None
+    #     :param uuid: 출금 UUID
+    #     :param currency: Currency 코드
+    #     :param contain_req: Remaining-Req 포함여부
+    #     :return:
+    #     """
+    #     try:
+    #         url = "https://api.upbit.com/v1/withdraw"
+    #         data = {"uuid": uuid, "currency": currency}
+    #         headers = self._request_headers(data)
+    #         result = _send_get_request(url, headers=headers, data=data)
+    #         if contain_req:
+    #             return result
+    #         else:
+    #             return result[0]
+    #     except Exception as x:
+    #         print(x.__class__.__name__)
+    #         return None
 
 
-    #     코인 출금하기  
-    def withdraw_coin(self, currency, amount, address, secondary_address='None', transaction_type='default', contain_req=False):
-        """
-        코인 출금
-        :param currency: Currency symbol
-        :param amount: 주문 가격
-        :param address: 출금 지갑 주소
-        :param secondary_address: 2차 출금주소 (필요한 코인에 한해서)
-        :param transaction_type: 출금 유형
-        :param contain_req: Remaining-Req 포함여부
-        :return:
-        """
-        try:
-            url = "https://api.upbit.com/v1/withdraws/coin"
-            data = {"currency": currency,
-                    "amount": amount,
-                    "address": address,
-                    "secondary_address": secondary_address,
-                    "transaction_type": transaction_type}
-            headers = self._request_headers(data)
-            result = _send_post_request(url, headers=headers, data=data)
-            if contain_req:
-                return result
-            else:
-                return result[0]
-        except Exception as x:
-            print(x.__class__.__name__)
-            return None
+    # #     코인 출금하기  
+    # def withdraw_coin(self, currency, amount, address, secondary_address='None', transaction_type='default', contain_req=False):
+    #     """
+    #     코인 출금
+    #     :param currency: Currency symbol
+    #     :param amount: 주문 가격
+    #     :param address: 출금 지갑 주소
+    #     :param secondary_address: 2차 출금주소 (필요한 코인에 한해서)
+    #     :param transaction_type: 출금 유형
+    #     :param contain_req: Remaining-Req 포함여부
+    #     :return:
+    #     """
+    #     try:
+    #         url = "https://api.upbit.com/v1/withdraws/coin"
+    #         data = {"currency": currency,
+    #                 "amount": amount,
+    #                 "address": address,
+    #                 "secondary_address": secondary_address,
+    #                 "transaction_type": transaction_type}
+    #         headers = self._request_headers(data)
+    #         result = _send_post_request(url, headers=headers, data=data)
+    #         if contain_req:
+    #             return result
+    #         else:
+    #             return result[0]
+    #     except Exception as x:
+    #         print(x.__class__.__name__)
+    #         return None
 
 
-    #     원화 출금하기
-    def withdraw_cash(self, amount: str, contain_req=False):
-        """
-        현금 출금
-        :param amount: 출금 액수
-        :param contain_req: Remaining-Req 포함여부
-        :return:
-        """
-        try:
-            url = "https://api.upbit.com/v1/withdraws/krw"
-            data = {"amount": amount}
-            headers = self._request_headers(data)
-            result = _send_post_request(url, headers=headers, data=data)
-            if contain_req:
-                return result
-            else:
-                return result[0]
-        except Exception as x:
-            print(x.__class__.__name__)
-            return None
+    # #     원화 출금하기
+    # def withdraw_cash(self, amount: str, contain_req=False):
+    #     """
+    #     현금 출금
+    #     :param amount: 출금 액수
+    #     :param contain_req: Remaining-Req 포함여부
+    #     :return:
+    #     """
+    #     try:
+    #         url = "https://api.upbit.com/v1/withdraws/krw"
+    #         data = {"amount": amount}
+    #         headers = self._request_headers(data)
+    #         result = _send_post_request(url, headers=headers, data=data)
+    #         if contain_req:
+    #             return result
+    #         else:
+    #             return result[0]
+    #     except Exception as x:
+    #         print(x.__class__.__name__)
+    #         return None
 
 
     #--------------------------------------------------------------------------
     # 입금 
     #--------------------------------------------------------------------------
     #     입금 리스트 조회 
-    def get_deposit_list(self, currency: str, contain_req=False):
-        """
-        입금 리스트 조회
-        :currency: Currency 코드
-        :param contain_req: Remaining-Req 포함여부
-        :return:
-        """
-        try:
-            url = "https://api.upbit.com//v1/deposits"
-            data = {"currency": currency}
-            headers = self._request_headers(data)
+    # def get_deposit_list(self, currency: str, contain_req=False):
+    #     """
+    #     입금 리스트 조회
+    #     :currency: Currency 코드
+    #     :param contain_req: Remaining-Req 포함여부
+    #     :return:
+    #     """
+    #     try:
+    #         url = "https://api.upbit.com//v1/deposits"
+    #         data = {"currency": currency}
+    #         headers = self._request_headers(data)
 
-            result = _send_get_request(url, headers=headers, data=data)
-            if contain_req:
-                return result
-            else:
-                return result[0]
-        except Exception as x:
-            print(x.__class__.__name__)
-            return None
+    #         result = _send_get_request(url, headers=headers, data=data)
+    #         if contain_req:
+    #             return result
+    #         else:
+    #             return result[0]
+    #     except Exception as x:
+    #         print(x.__class__.__name__)
+    #         return None
             
+    # #     개별 입금 조회
+    # def get_individual_deposit_order(self, uuid: str, currency: str, contain_req=False):
+    #     """
     #     개별 입금 조회
-    def get_individual_deposit_order(self, uuid: str, currency: str, contain_req=False):
-        """
-        개별 입금 조회
-        :param uuid: 입금 UUID
-        :param currency: Currency 코드
-        :param contain_req: Remaining-Req 포함여부
-        :return:
-        """
-        try:
-            url = "https://api.upbit.com/v1/deposit"
-            data = {"uuid": uuid, "currency": currency}
-            headers = self._request_headers(data)
-            result = _send_get_request(url, headers=headers, data=data)
-            if contain_req:
-                return result
-            else:
-                return result[0]
-        except Exception as x:
-            print(x.__class__.__name__)
-            return None
+    #     :param uuid: 입금 UUID
+    #     :param currency: Currency 코드
+    #     :param contain_req: Remaining-Req 포함여부
+    #     :return:
+    #     """
+    #     try:
+    #         url = "https://api.upbit.com/v1/deposit"
+    #         data = {"uuid": uuid, "currency": currency}
+    #         headers = self._request_headers(data)
+    #         result = _send_get_request(url, headers=headers, data=data)
+    #         if contain_req:
+    #             return result
+    #         else:
+    #             return result[0]
+    #     except Exception as x:
+    #         print(x.__class__.__name__)
+    #         return None
 
 
     #     입금 주소 생성 요청 
@@ -611,25 +612,25 @@ class Upbit:
     # 서비스 정보 
     #--------------------------------------------------------------------------
     #     입출금 현황 
-    def get_deposit_withdraw_status(self, contain_req=False):
-        url = "https://api.upbit.com/v1/status/wallet"
-        headers = self._request_headers()
-        result = _send_get_request(url, headers=headers)
-        if contain_req:
-            return result
-        else:
-            return result[0]
+    # def get_deposit_withdraw_status(self, contain_req=False):
+    #     url = "https://api.upbit.com/v1/status/wallet"
+    #     headers = self._request_headers()
+    #     result = _send_get_request(url, headers=headers)
+    #     if contain_req:
+    #         return result
+    #     else:
+    #         return result[0]
 
 
-    #     API키 리스트 조회
-    def get_api_key_list(self, contain_req=False):
-        url = "https://api.upbit.com/v1/api_keys"
-        headers = self._request_headers()
-        result = _send_get_request(url, headers=headers)
-        if contain_req:
-            return result
-        else:
-            return result[0]
+    # #     API키 리스트 조회
+    # def get_api_key_list(self, contain_req=False):
+    #     url = "https://api.upbit.com/v1/api_keys"
+    #     headers = self._request_headers()
+    #     result = _send_get_request(url, headers=headers)
+    #     if contain_req:
+    #         return result
+    #     else:
+    #         return result[0]
 
 
 if __name__ == "__main__":

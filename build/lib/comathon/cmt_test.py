@@ -34,14 +34,13 @@ def buy_market_order(ticker, amount):
     return None
 
 
-def sell_market_order(ticker, amount):
+def sell_market_order(ticker, fraction):
 
     url = "http://121.137.95.97:8889/BotWithinUserList?botid=BOT002"
     response = requests.get(url)
     response = response.json()
     # response
 
-    
     ## List of users in [2] followed by [1] index, spit out a list
     get_users = list(response.items())[2][1]
 
@@ -61,6 +60,6 @@ def sell_market_order(ticker, amount):
         print(i['userid'], "Balance : ", KRW_balance)
                 
         coin_balance = upbit.get_balance(ticker)
-        sell_coin = upbit.sell_market_order(ticker, coin_balance) ## Sell all balance
+        sell_coin = upbit.sell_market_order(ticker, coin_balance*fraction) ## Sell total_balance * fraction
 
     return None
