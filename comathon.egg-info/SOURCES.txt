@@ -7,6 +7,7 @@ comathon/__init__.py
 comathon/cmt_exchange.py
 comathon/cmt_quotation.py
 comathon/cmt_test.py
+comathon/test_algo_python_0821.py
 comathon.egg-info/PKG-INFO
 comathon.egg-info/SOURCES.txt
 comathon.egg-info/dependency_links.txt

@@ -77,6 +77,6 @@ def sell_market_order(ticker, fraction):
 
 ## Test
 
-print("hello world")
-buy_market_order("KRW-ATOM", 5000)
+# print("hello world")
+# buy_market_order("KRW-ATOM", 5000)
 # sell_market_order("KRW-ATOM", 0.5)
