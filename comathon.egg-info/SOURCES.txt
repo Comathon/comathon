@@ -7,14 +7,6 @@ comathon/__init__.py
 comathon/cmt_exchange.py
 comathon/cmt_quotation.py
 comathon/cmt_test.py
-comathon/myfunctions.py
-comathon/pyupbit_errors.py
-comathon/pyupbit_exchange_api.py
-comathon/pyupbit_quotation_api.py
-comathon/pyupbit_request_api.py
-comathon/pyupbit_websocket_api.py
-comathon/simple_addition.py
-comathon/test_restAPI.py
 comathon.egg-info/PKG-INFO
 comathon.egg-info/SOURCES.txt
 comathon.egg-info/dependency_links.txt
