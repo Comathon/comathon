@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='comathon',
-    version='0.0.12',
+    version='0.0.14',
     license='MIT',
     author="Comathon",
     author_email='Comathon2020@gmail.com',
