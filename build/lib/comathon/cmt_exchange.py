@@ -61,9 +61,10 @@ def get_tick_size(price, method="floor"):
 
 
 class Upbit:
-    def __init__(self, access, secret):
+    def __init__(self, access, secret, cmt_ID=None):
         self.access = access
         self.secret = secret
+        self.ID = cmt_ID
 
 
     def _request_headers(self, query=None):
@@ -332,127 +333,127 @@ class Upbit:
             return None
 
     #    주문 취소 접수
-    # def cancel_order(self, uuid, contain_req=False):
-    #     """
-    #     주문 취소
-    #     :param uuid: 주문 함수의 리턴 값중 uuid
-    #     :param contain_req: Remaining-Req 포함여부
-    #     :return:
-    #     """
-    #     try:
-    #         url = "https://api.upbit.com/v1/order"
-    #         data = {"uuid": uuid}
-    #         headers = self._request_headers(data)
-    #         result = _send_delete_request(url, headers=headers, data=data)
-    #         if contain_req:
-    #             return result
-    #         else:
-    #             return result[0]
-    #     except Exception as x:
-    #         print(x.__class__.__name__)
-    #         return None
+    def cancel_order(self, uuid, contain_req=False):
+        """
+        주문 취소
+        :param uuid: 주문 함수의 리턴 값중 uuid
+        :param contain_req: Remaining-Req 포함여부
+        :return:
+        """
+        try:
+            url = "https://api.upbit.com/v1/order"
+            data = {"uuid": uuid}
+            headers = self._request_headers(data)
+            result = _send_delete_request(url, headers=headers, data=data)
+            if contain_req:
+                return result
+            else:
+                return result[0]
+        except Exception as x:
+            print(x.__class__.__name__)
+            return None
 
 
     #     주문 
-    # def buy_limit_order(self, ticker, price, volume, contain_req=False):
-    #     """
-    #     지정가 매수
-    #     :param ticker: 마켓 티커
-    #     :param price: 주문 가격
-    #     :param volume: 주문 수량
-    #     :param contain_req: Remaining-Req 포함여부
-    #     :return:
-    #     """
-    #     try:
-    #         url = "https://api.upbit.com/v1/orders"
-    #         data = {"market": ticker,
-    #                 "side": "bid",
-    #                 "volume": str(volume),
-    #                 "price": str(price),
-    #                 "ord_type": "limit"}
-    #         headers = self._request_headers(data)
-    #         result = _send_post_request(url, headers=headers, data=data)
-    #         if contain_req:
-    #             return result
-    #         else:
-    #             return result[0]
-    #     except Exception as x:
-    #         print(x.__class__.__name__)
-    #         return None
+    def buy_limit_order_single(self, ticker, price, volume, contain_req=False):
+        """
+        지정가 매수
+        :param ticker: 마켓 티커
+        :param price: 주문 가격
+        :param volume: 주문 수량
+        :param contain_req: Remaining-Req 포함여부
+        :return:
+        """
+        try:
+            url = "https://api.upbit.com/v1/orders"
+            data = {"market": ticker,
+                    "side": "bid",
+                    "volume": str(volume),
+                    "price": str(price),
+                    "ord_type": "limit"}
+            headers = self._request_headers(data)
+            result = _send_post_request(url, headers=headers, data=data)
+            if contain_req:
+                return result
+            else:
+                return result[0]
+        except Exception as x:
+            print(x.__class__.__name__)
+            return None
 
-    # def buy_market_order(self, ticker, price, contain_req=False):
-    #     """
-    #     시장가 매수
-    #     :param ticker: ticker for cryptocurrency
-    #     :param price: KRW
-    #     :param contain_req: Remaining-Req 포함여부
-    #     :return:
-    #     """
-    #     try:
-    #         url = "https://api.upbit.com/v1/orders"
-    #         data = {"market": ticker,  # market ID
-    #                 "side": "bid",  # buy
-    #                 "price": str(price),
-    #                 "ord_type": "price"}
-    #         headers = self._request_headers(data)
-    #         result = _send_post_request(url, headers=headers, data=data)
-    #         if contain_req:
-    #             return result
-    #         else:
-    #             return result[0]
-    #     except Exception as x:
-    #         print(x.__class__.__name__)
-    #         return None
+    def buy_market_order_single(self, ticker, price, contain_req=False):
+        """
+        시장가 매수
+        :param ticker: ticker for cryptocurrency
+        :param price: KRW
+        :param contain_req: Remaining-Req 포함여부
+        :return:
+        """
+        try:
+            url = "https://api.upbit.com/v1/orders"
+            data = {"market": ticker,  # market ID
+                    "side": "bid",  # buy
+                    "price": str(price),
+                    "ord_type": "price"}
+            headers = self._request_headers(data)
+            result = _send_post_request(url, headers=headers, data=data)
+            if contain_req:
+                return result
+            else:
+                return result[0]
+        except Exception as x:
+            print(x.__class__.__name__)
+            return None
 
-    # def sell_market_order(self, ticker, volume, contain_req=False):
-    #     """
-    #     시장가 매도 메서드
-    #     :param ticker: 가상화폐 티커
-    #     :param volume: 수량
-    #     :param contain_req: Remaining-Req 포함여부
-    #     :return:
-    #     """
-    #     try:
-    #         url = "https://api.upbit.com/v1/orders"
-    #         data = {"market": ticker,  # ticker
-    #                 "side": "ask",  # sell
-    #                 "volume": str(volume),
-    #                 "ord_type": "market"}
-    #         headers = self._request_headers(data)
-    #         result = _send_post_request(url, headers=headers, data=data)
-    #         if contain_req:
-    #             return result
-    #         else:
-    #             return result[0]
-    #     except Exception as x:
-    #         print(x.__class__.__name__)
-    #         return None
+    def sell_market_order_single(self, ticker, volume, contain_req=False):
+        """
+        시장가 매도 메서드
+        :param ticker: 가상화폐 티커
+        :param volume: 수량
+        :param contain_req: Remaining-Req 포함여부
+        :return:
+        """
+        try:
+            url = "https://api.upbit.com/v1/orders"
+            data = {"market": ticker,  # ticker
+                    "side": "ask",  # sell
+                    "volume": str(volume),
+                    "ord_type": "market"}
+            headers = self._request_headers(data)
+            result = _send_post_request(url, headers=headers, data=data)
+            if contain_req:
+                return result
+            else:
+                return result[0]
+        except Exception as x:
+            print(x.__class__.__name__)
+            return None
 
-    # def sell_limit_order(self, ticker, price, volume, contain_req=False):
-    #     """
-    #     지정가 매도
-    #     :param ticker: 마켓 티커
-    #     :param price: 주문 가격
-    #     :param volume: 주문 수량
-    #     :param contain_req: Remaining-Req 포함여부
-    #     :return:
-    #     """
-    #     try:
-    #         url = "https://api.upbit.com/v1/orders"
-    #         data = {"market": ticker,
-    #                 "side": "ask",
-    #                 "volume": str(volume),
-    #                 "price": str(price),
-    #                 "ord_type": "limit"}
-    #         headers = self._request_headers(data)
-    #         result = _send_post_request(url, headers=headers, data=data)
-    #         if contain_req:
-    #             return result
-    #         else:
-    #             return result[0]
-    #     except Exception as x:
-    #         print(x.__class__.__name__)
-    #         return None
+    def sell_limit_order_single(self, ticker, price, volume, contain_req=False):
+        """
+        지정가 매도
+        :param ticker: 마켓 티커
+        :param price: 주문 가격
+        :param volume: 주문 수량
+        :param contain_req: Remaining-Req 포함여부
+        :return:
+        """
+        try:
+            url = "https://api.upbit.com/v1/orders"
+            data = {"market": ticker,
+                    "side": "ask",
+                    "volume": str(volume),
+                    "price": str(price),
+                    "ord_type": "limit"}
+            headers = self._request_headers(data)
+            result = _send_post_request(url, headers=headers, data=data)
+            if contain_req:
+                return result
+            else:
+                return result[0]
+        except Exception as x:
+            print(x.__class__.__name__)
+            return None
 
 
     #--------------------------------------------------------------------------
