@@ -3,9 +3,10 @@ import pyupbit
 
 
 ## Checking code_status
+import socket 
 
 def code_status():
-    import socket  
+    
     is_server = False
 
     my_IP = socket.gethostbyname(socket.gethostname())
@@ -13,13 +14,15 @@ def code_status():
 
     server_IP = '121.137.95.97'
     dev_IP = '175.207.155.229'
+    dev_IP_laptop = '192.168.213.94'
 
-    if my_IP == server_IP or my_IP == dev_IP:
+    if my_IP == server_IP or my_IP == dev_IP_laptop:
         print("The code is being run by the server or Jeong's computer")
         is_server = True
     
     else:
         print("The code is being run on a personal computer")
+        print("is_server variable : ", is_server)
 
     return is_server
 
@@ -64,10 +67,11 @@ def buy_market_order(API, ticker, amount):
             access_key = i['apikey']
             secret_key = i['securitykey']
 
-            user_upbit = cmt.Upbit(access_key, secret_key)  # Upbit API instance 생성, ID는 무시
+            user_upbit = pyupbit.Upbit(access_key, secret_key)  # cmt과 다른 모듈이 필요
             
-            KRW_balance = user_upbit.get_balance()
+            KRW_balance = user_upbit.get_balance("KRW")
             print(i['userid'], "Balance : ", KRW_balance)
+
             user_upbit.buy_market_order(ticker, amount)
             print(i['userid'], "ticker : ", ticker, "Purchased Amount : ", amount)
                
@@ -75,7 +79,7 @@ def buy_market_order(API, ticker, amount):
     return None
 
 
-def sell_market_order(ticker, fraction):
+def sell_market_order(API, ticker, fraction):
 
     ## API = Upbit API instance --> need it to map to the dedicated BOT
 
@@ -85,10 +89,15 @@ def sell_market_order(ticker, fraction):
         ## If the code is being run on a PC, then proceed as normal
     if is_server == False:
         print("is_server is False, hence buy only user's")
-        KRW_balance = API.get_balance()
-        print("Balance : ", KRW_balance)
-        API.buy_market_order_single(ticker, amount) ## This needs separate treatment
-        print("ticker : ", ticker, "Purchased Amount : ", amount)
+        coin_balance = API.get_balance(ticker)
+        print("ticker :", ticker, "ticker Balance : ", coin_balance)
+        
+        ## coin_balance가 None일때 exception 처리 필요
+        if coin_balance == None:
+            print("Coin Balance is None, cannot proceed")
+        else:
+            API.sell_market_order_single(ticker, coin_balance * fraction) ## This may need separate treatment
+            print("ticker : ", ticker, "Sold Amount : ", coin_balance * fraction)
 
     ## If the code is being run on the server
     else:
@@ -114,20 +123,22 @@ def sell_market_order(ticker, fraction):
             access_key = i['apikey']
             secret_key = i['securitykey']
 
-            user_upbit = cmt.Upbit(access_key, secret_key)  # API 로그인 함수 호출
+            user_upbit = pyupbit.Upbit(access_key, secret_key)  # API 로그인 함수 호출
             # KRW_balance = upbit.get_balance()
                             
             coin_balance = user_upbit.get_balance(ticker)
-            print(coin_balance)
-
             print(i['userid'], "ticker : ", ticker, "ticker Balance : ", coin_balance)
+            if coin_balance == None:
+                print("Coin Balance is None, cannot proceed")
+            else:
+                ## coin_balance가 None일때 exception 처리 필요
+                user_upbit.sell_market_order(ticker, coin_balance * fraction) ## Sell total_balance * fraction
+                # upbit.sell_market_order(ticker, coin_balance) ## Sell total_balance * fraction
+                
+                coin_balance_updated = user_upbit.get_balance(ticker)
 
-            user_upbit.sell_market_order(ticker, coin_balance * fraction) ## Sell total_balance * fraction
-            # upbit.sell_market_order(ticker, coin_balance) ## Sell total_balance * fraction
-            
-            coin_balance_updated = user_upbit.get_balance(ticker)
+                print(i['userid'], "ticker : ", ticker, "new ticker Balance : ", coin_balance_updated)
 
-            print(i['userid'], "ticker : ", ticker, "new ticker Balance : ", coin_balance_updated)
 
     return None
 

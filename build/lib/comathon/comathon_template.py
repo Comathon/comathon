@@ -13,7 +13,7 @@ comathon_ID = "kptib88"
 
 myAPI = cmt.Upbit(access_key, secret_key, comathon_ID)  # API 로그인 함수 호출
 myAPI #myAPI 라는 instance가 생성됨
-
+myAPI.get_balance("KRW")
 ##-------------------------------------------------------------------
 
 
