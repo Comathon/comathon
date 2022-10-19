@@ -6,7 +6,7 @@ setup.py
 comathon/__init__.py
 comathon/cmt_exchange.py
 comathon/cmt_quotation.py
-comathon/cmt_test.py
+comathon/cmt_test_obsolete.py
 comathon/comathon_template.py
 comathon/test_algo.py
 comathon.egg-info/PKG-INFO

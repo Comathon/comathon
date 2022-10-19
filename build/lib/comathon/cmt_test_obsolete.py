@@ -14,7 +14,7 @@ def code_status():
 
     server_IP = '121.137.95.97'
     dev_IP = '175.207.155.229'
-    # dev_IP_laptop = '192.168.213.94'
+    dev_IP_laptop = '192.168.213.94'
 
     if my_IP == server_IP or my_IP == dev_IP_laptop or my_IP == dev_IP:
         print("The code is being run by the server or Jeong's computer")
@@ -26,6 +26,38 @@ def code_status():
 
     return is_server
 
+
+def bot_mapping(API):
+    ## Bot List
+    url = "http://121.137.95.97:8889/BotList"
+    response = requests.get(url)
+    response = response.json()
+    print(response)
+
+    ## Find the botid that matches my ID
+    ## Then create a string url using that botid
+
+    get_bots = list(response.items())[2][1]
+    get_bots
+
+    num_bots = len(get_bots)
+    print("Number of active bots : ", num_bots)
+    print("my user ID is :", API.ID)
+    for i in get_bots:
+        save_ID = i['makerid']
+        save_botid = i['botid']
+
+        print(save_ID, save_botid)
+
+        if save_ID == API.ID:
+            bot_connect = save_botid
+            print("the user will be mapped to the bot : ", bot_connect)
+            url = "http://121.137.95.97:8889/BotWithinUserList?botid=" + bot_connect
+            print(url)
+        else:
+            print("not this bot")
+
+    return url
 
 ## Buy Function
 def buy_market_order(API, ticker, amount):
@@ -49,7 +81,8 @@ def buy_market_order(API, ticker, amount):
         ## This is where we need to map USER to the BOT Name
 
         ## find the bot that is mapped to the user API.ID
-        url = "http://121.137.95.97:8889/BotWithinUserList?botid=BOT002"
+        # url = "http://121.137.95.97:8889/BotWithinUserList?botid=BOT002"
+        url = bot_mapping(API)
         response = requests.get(url)
         response = response.json()
         # response
@@ -105,7 +138,8 @@ def sell_market_order(API, ticker, fraction):
 
         ## This is where we need to map USER to the BOT Name
         ## find the bot that is mapped to the user API.ID
-        url = "http://121.137.95.97:8889/BotWithinUserList?botid=BOT002"
+        # url = "http://121.137.95.97:8889/BotWithinUserList?botid=BOT002"
+        url = bot_mapping(API)
         response = requests.get(url)
         response = response.json()
         # response

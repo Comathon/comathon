@@ -1,6 +1,6 @@
 # import requests
 
-from .cmt_test import *
+# from .cmt_test_obsolete import *
 from .cmt_exchange import *
 from .cmt_quotation import *
 import socket
@@ -10,9 +10,6 @@ print("Comathon Module Imported, GAZUA")
 ## Check if the code is being run from the server of from the personal computer
 
 ## Create API upbit instances here? Then how can we check if someone cut out the connection or added a one?
-
-
-import socket
 
 def code_status():
     

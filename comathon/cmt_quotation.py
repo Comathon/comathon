@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
 """
-pyupbit.quotation_api
+comathon.quotation_api
 
-This module provides quatation api of the Upbit API.
+This module provides quatation api of the Upbit API for Comathon Website.
 """
 
 import datetime
