@@ -16,6 +16,63 @@ import socket
 from urllib.parse import urlencode
 from pyupbit.request_api import _send_get_request, _send_post_request, _send_delete_request
 
+def code_status():
+    ## Checks whether the code is being run by the server or by a personal computer
+    is_server = False
+
+    my_IP = socket.gethostbyname(socket.gethostname())
+    print("my IP address : ", my_IP)
+
+    server_IP = '121.137.95.97'
+    aws_IP = '43.201.123.167'
+    dev_IP = '175.207.155.229'
+    dev_IP_laptop = '192.168.213.94'
+    dev_IP_school = ''
+
+    if my_IP == server_IP or my_IP == aws_IP or my_IP == dev_IP_laptop or my_IP == dev_IP:
+        print("The code is being run by the server or Jeong's computer")
+        is_server = True
+    
+    else:
+        print("The code is being run on a personal computer")
+        print("is_server variable : ", is_server)
+
+    return is_server
+
+
+def bot_mapping(API):
+    ## Finds the BOT that the user is mapped to, and returns the BOT address
+    ## Bot List
+    url = "http://121.137.95.97:8889/BotList"
+    response = requests.get(url)
+    response = response.json()
+    # print(response)
+
+    ## Find the botid that matches my ID
+    ## Then create a string url using that botid
+
+    get_bots = list(response.items())[2][1]
+    get_bots
+
+    num_bots = len(get_bots)
+    print("Number of active bots : ", num_bots)
+    print("my user ID is :", API.ID)
+    for i in get_bots:
+        save_ID = i['makerid']
+        save_botid = i['botid']
+
+        print(save_ID, save_botid)
+
+        if save_ID == API.ID:
+            bot_connect = save_botid
+            print("the user will be mapped to the bot : ", bot_connect)
+            url = "http://121.137.95.97:8889/BotWithinUserList?botid=" + bot_connect
+            print(url)
+        else:
+            print("not this bot")
+
+    return url
+
 
 def get_tick_size(price, method="floor"):
     """원화마켓 주문 가격 단위 
@@ -61,61 +118,7 @@ def get_tick_size(price, method="floor"):
     return tick_size
 
 
-def code_status():
-    ## Checks whether the code is being run by the server or by a personal computer
-    is_server = False
 
-    my_IP = socket.gethostbyname(socket.gethostname())
-    print("my IP address : ", my_IP)
-
-    server_IP = '121.137.95.97'
-    dev_IP = '175.207.155.229'
-    dev_IP_laptop = '192.168.213.94'
-    dev_IP_school = ''
-
-    if my_IP == server_IP or my_IP == dev_IP_laptop or my_IP == dev_IP:
-        print("The code is being run by the server or Jeong's computer")
-        is_server = True
-    
-    else:
-        print("The code is being run on a personal computer")
-        print("is_server variable : ", is_server)
-
-    return is_server
-
-
-def bot_mapping(API):
-    ## Finds the BOT that the user is mapped to, and returns the BOT address
-    ## Bot List
-    url = "http://121.137.95.97:8889/BotList"
-    response = requests.get(url)
-    response = response.json()
-    # print(response)
-
-    ## Find the botid that matches my ID
-    ## Then create a string url using that botid
-
-    get_bots = list(response.items())[2][1]
-    get_bots
-
-    num_bots = len(get_bots)
-    print("Number of active bots : ", num_bots)
-    print("my user ID is :", API.ID)
-    for i in get_bots:
-        save_ID = i['makerid']
-        save_botid = i['botid']
-
-        print(save_ID, save_botid)
-
-        if save_ID == API.ID:
-            bot_connect = save_botid
-            print("the user will be mapped to the bot : ", bot_connect)
-            url = "http://121.137.95.97:8889/BotWithinUserList?botid=" + bot_connect
-            print(url)
-        else:
-            print("not this bot")
-
-    return url
 
 class Upbit:
     def __init__(self, access, secret, cmt_ID=None):
