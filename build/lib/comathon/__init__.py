@@ -12,18 +12,20 @@ print("Comathon Module Imported, GAZUA")
 ## Create API upbit instances here? Then how can we check if someone cut out the connection or added a one?
 
 def code_status():
-    
+    ## Checks whether the code is being run by the server or by a personal computer
     is_server = False
 
     my_IP = socket.gethostbyname(socket.gethostname())
     print("my IP address : ", my_IP)
 
     server_IP = '121.137.95.97'
-    aws_IP = ''
+    aws_IP = '43.201.123.167'
     dev_IP = '175.207.155.229'
+    home_IP = '121.142.61.184'
     dev_IP_laptop = '192.168.213.94'
+    # dev_IP_school = ''
 
-    if my_IP == server_IP or my_IP == dev_IP_laptop:
+    if my_IP == server_IP or my_IP == aws_IP or my_IP == dev_IP_laptop or my_IP == dev_IP or my_IP == home_IP:
         print("The code is being run by the server or Jeong's computer")
         is_server = True
     

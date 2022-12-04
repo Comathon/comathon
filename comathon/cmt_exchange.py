@@ -13,6 +13,7 @@ import re
 import uuid
 import hashlib
 import socket
+import requests
 from urllib.parse import urlencode
 from pyupbit.request_api import _send_get_request, _send_post_request, _send_delete_request
 
@@ -26,10 +27,11 @@ def code_status():
     server_IP = '121.137.95.97'
     aws_IP = '43.201.123.167'
     dev_IP = '175.207.155.229'
+    home_IP = '121.142.61.184'
     dev_IP_laptop = '192.168.213.94'
-    dev_IP_school = ''
+    # dev_IP_school = ''
 
-    if my_IP == server_IP or my_IP == aws_IP or my_IP == dev_IP_laptop or my_IP == dev_IP:
+    if my_IP == server_IP or my_IP == aws_IP or my_IP == dev_IP_laptop or my_IP == dev_IP or my_IP == home_IP:
         print("The code is being run by the server or Jeong's computer")
         is_server = True
     
@@ -43,7 +45,7 @@ def server_alive():
     ## Check if the server is online and running
     url = "http://121.137.95.97:8889/BotList"
     response = requests.get(url).json()['ResCode'] 
-       
+
     if response == "OK":
         server_alive = True        
     else:
