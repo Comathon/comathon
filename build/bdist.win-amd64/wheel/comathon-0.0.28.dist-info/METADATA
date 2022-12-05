@@ -7,3 +7,6 @@ Author: Comathon
 Author-email: Comathon2020@gmail.com
 License: MIT
 License-File: LICENSE.rst
+Requires-Dist: requests
+Requires-Dist: pyupbit
+

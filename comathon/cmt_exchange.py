@@ -41,7 +41,7 @@ def code_status():
 
 def server_alive():
     ## Check if the server is online and running
-    url = "http://121.137.95.97:8889/BotList"
+    url = "http://121.137.95.97:8889/Botalive?botid=Bot001"
     response = requests.get(url).json()['ResCode'] 
        
     if response == "OK":

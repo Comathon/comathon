@@ -39,6 +39,19 @@ def code_status():
 
     return is_server
 
+def server_alive():
+    ## Check if the server is online and running
+    url = "http://121.137.95.97:8889/BotList"
+    response = requests.get(url).json()['ResCode'] 
+       
+    if response == "OK":
+        server_alive = True        
+    else:
+        server_alive = False
+        
+    return server_alive
+    
+
 
 def bot_mapping(API):
     ## Finds the BOT that the user is mapped to, and returns the BOT address
