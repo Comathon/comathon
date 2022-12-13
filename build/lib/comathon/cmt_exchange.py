@@ -14,12 +14,8 @@ import uuid
 import hashlib
 import socket
 import requests
-import time
-import datetime as dt
-
 from urllib.parse import urlencode
 from pyupbit.request_api import _send_get_request, _send_post_request, _send_delete_request
-
 
 def code_status():
     ## Checks whether the code is being run by the server or by a personal computer
@@ -29,14 +25,13 @@ def code_status():
     print("my IP address : ", my_IP)
 
     server_IP = '121.137.95.97'
-    server_IP2 = '172.31.58.99'
     aws_IP = '43.201.123.167'
     dev_IP = '175.207.155.229'
     home_IP = '121.142.61.184'
     dev_IP_laptop = '192.168.213.94'
     # dev_IP_school = ''
 
-    if my_IP == server_IP or my_IP == server_IP2 or my_IP == aws_IP or my_IP == dev_IP_laptop or my_IP == dev_IP or my_IP == home_IP:
+    if my_IP == server_IP or my_IP == aws_IP or my_IP == dev_IP_laptop or my_IP == dev_IP or my_IP == home_IP:
         print("The code is being run by the server or Jeong's computer")
         is_server = True
     
@@ -48,9 +43,9 @@ def code_status():
 
 def server_alive():
     ## Check if the server is online and running
-    url = "http://121.137.95.97:8889/Botalive?botid=Bot001"
+    url = "http://121.137.95.97:8889/BotList"
     response = requests.get(url).json()['ResCode'] 
-       
+
     if response == "OK":
         server_alive = True        
     else:
@@ -59,253 +54,40 @@ def server_alive():
     return server_alive
     
 
+
 def bot_mapping(API):
     ## Finds the BOT that the user is mapped to, and returns the BOT address
     ## Bot List
     url = "http://121.137.95.97:8889/BotList"
-    response = requests.get(url).json()    
+    response = requests.get(url)
+    response = response.json()
     # print(response)
 
     ## Find the botid that matches my ID
     ## Then create a string url using that botid
-    ## Concatenate the bot address, return the very first item
-    ## Technically, an user should be mapped to only one bot
 
     get_bots = list(response.items())[2][1]
-    # get_bots
+    get_bots
 
     num_bots = len(get_bots)
     print("Number of active bots : ", num_bots)
     print("my user ID is :", API.ID)
-    bot_url_list = []
     for i in get_bots:
         save_ID = i['makerid']
         save_botid = i['botid']
 
-        # print(save_ID, save_botid)
+        print(save_ID, save_botid)
 
         if save_ID == API.ID:
             bot_connect = save_botid
-            # print("the user will be mapped to the bot : ", bot_connect)
+            print("the user will be mapped to the bot : ", bot_connect)
             url = "http://121.137.95.97:8889/BotWithinUserList?botid=" + bot_connect
-            bot_url_list.append(url)
-            # print(url)
+            print(url)
         else:
-            # print("not this bot")
-            pass
+            print("not this bot")
 
-    print(bot_url_list[0])
+    return url
 
-    return bot_url_list[0] ##Return the first item, as other items are only for test (should be mapped to only one bot)
-
-def get_last_order(API, ticker):
-    ## Look for the last order information for a given ticker (both cancel and done)
-    ## Compare which one is the latest, return the UUID of the latest order
-
-    order_done = API.get_order(ticker, state="done", limit=1)
-    order_cancel = API.get_order(ticker, state="cancel", limit = 1)
-
-    order_done_time = order_done[0]['created_at'][:-6] #Cut out the last 6 digits
-    order_cancel_time = order_cancel[0]['created_at'][:-6] #Cut out the last 6 digits
-
-    order_done_time_adjusted = dt.datetime.strptime(order_done_time, '%Y-%m-%dT%H:%M:%S')
-    order_cancel_time_adjusted = dt.datetime.strptime(order_cancel_time, '%Y-%m-%dT%H:%M:%S')
-
-    ## Current Time
-    c_time = dt.datetime.today()
-
-    ## Get Time Differences
-    timediff_done = c_time - order_done_time_adjusted
-    timediff_cancel = c_time - order_cancel_time_adjusted
-
-    # print(timediff_done)
-    # print(timediff_cancel)
-
-    check = timediff_done < timediff_cancel
-
-    if check == False:
-        print("Last Order State = Cancel")
-        return order_cancel[0]['uuid']
-
-    else:
-        print("Last Order State = Done")
-        return order_done[0]['uuid']
-
-
-def create_order_url(botid, userid, uuid, last_order):
-
-    ## I should pass API which should include  botID, userID
-
-    server = "http://121.137.95.97:8889/" 
-    was_item = "botorder" 
-    botid = "BOT001"
-    userid = "test001"
-    uuid = last_order['uuid']
-    created_at = last_order['created_at'][:-6].translate({ord(i): None for i in '-T:'}) ##Need to convert the time format to 'YYYYMMDDHHMMSS'
-    # created_at = '2022 09 08 11 40 00' #YYYY MM DD HH MM SS
-    market = last_order['market']
-    side = last_order['side'] ## bid or ask
-    volume = last_order['executed_volume']
-    price = last_order['trades'][0]['price'] ## 주문가, 매도엔 없음
-    ord_type = last_order['ord_type'] ## limit, price, market
-
-    if side == 'bid': ## Buy    
-        buyprice = last_order['trades'][0]['price'] ## 거래 가격
-        buyvolume = last_order['trades'][0]['volume'] ## 총 거래량
-        buyfee = last_order['paid_fee'] # 거래수수료
-        order_url = (f'{server}{was_item}?botid={botid}&userid={userid}&uuid={uuid}&created_at={created_at}&market={market}&side={side}&volume={volume}&price={price}&ord_type={ord_type}&sellprice={buyprice}&sellvolume={buyvolume}&sellfee={buyfee}')
-
-    elif side == 'ask': ## Sell
-        sellprice = last_order['trades'][0]['price'] ## 거래 가격
-        sellvolume = last_order['trades'][0]['volume'] ## 총 거래량
-        sellfee = last_order['paid_fee'] # 거래수수료
-        order_url = (f'{server}{was_item}?botid={botid}&userid={userid}&uuid={uuid}&created_at={created_at}&market={market}&side={side}&volume={volume}&price={price}&ord_type={ord_type}&buyprice={buyprice}&buyvolume={buyvolume}&buyfee={buyfee}')
-
-    return order_url
-
-## Buy Function (CMT Function)
-def buy_market_order(API, ticker, amount):
-    ## API = Upbit API instance --> need it to map to the dedicated BOT
-
-    print("Buy Function Activated")    
-    is_server = code_status()
-    
-    ## If the code is being run on a PC, then proceed as normal
-    if is_server == False:
-        print("is_server is False, hence buy only user's")
-        KRW_balance = API.get_balance()
-        print("Balance : ", KRW_balance)
-        API.buy_market_order_single(ticker, amount) ## This needs separate treatment
-        print("ticker : ", ticker, "Purchased Amount : ", amount)
-
-    ## If the code is being run on the server
-    else:
-        print("is_server is True, hence run through all the users in the server")
-        ## This is where we need to map USER to the BOT Name
-
-        ## find the bot that is mapped to the user API.ID (e.g. test001)
-        #@ url = "http://121.137.95.97:8889/BotWithinUserList?botid=BOT001"
-        url = bot_mapping(API)
-        response = requests.get(url).json()        
-        # response
-
-        ## List of users in [2] followed by [1] index, spit out a list
-        get_users = list(response.items())[2][1]
-
-        num_users = len(get_users)
-        print("Number of Users : ", num_users)
-
-        for i in get_users:
-            print("User ID : ", i['userid'])
-            print("Access Key : ", i['apikey'])
-            print("Secret Key : ", i['securitykey'])
-            user_id = i['userid']
-            access_key = i['apikey']
-            secret_key = i['securitykey']
-            
-
-            user_upbit = pyupbit.Upbit(access_key, secret_key)  # cmt과 다른 모듈이 필요
-            
-            KRW_balance = user_upbit.get_balance("KRW")
-            print(i['userid'], "Balance : ", KRW_balance)
-
-            user_upbit.buy_market_order(ticker, amount)
-            print(i['userid'], "ticker : ", ticker, "Purchased Amount : ", amount)
-
-            try:
-                ## Check if the order has been made or not 
-                uuid = get_last_order(user_upbit, ticker) ## cmt function, returns uuid
-                last_order = user_upbit.get_order(uuid) ##pyupbit function
-                # last_order
-
-                ## if yes, then make WAS Request here
-
-                order_url = create_order_url(url[-6:], user_id, uuid, last_order)
-                response = requests.get(order_url).json()
-                print(response) 
-
-            except:
-                print("An exception has occured, probably the purchase was not made")
-                continue
-
-            ## if no, then find out why
-            
-
-    return print("cmt buy function complete")
-
-## Sell Function (CMT Function)
-def sell_market_order(API, ticker, fraction):
-
-    ## API = Upbit API instance --> need it to map to the dedicated BOT
-
-    print("Sell Function Activated")
-    is_server = code_status()
-
-        ## If the code is being run on a PC, then proceed as normal
-    if is_server == False:
-        print("is_server is False, hence buy only user's")
-        coin_balance = API.get_balance(ticker)
-        print("ticker :", ticker, "ticker Balance : ", coin_balance)
-        
-        ## coin_balance가 None일때 exception 처리 필요
-        if coin_balance == None:
-            print("Coin Balance is None, cannot proceed")
-        else:
-            API.sell_market_order_single(ticker, coin_balance * fraction) ## This may need separate treatment
-            print("ticker : ", ticker, "Sold Amount : ", coin_balance * fraction)
-
-    ## If the code is being run on the server
-    else:
-        print("is_server is True, hence run through all the users in the server")
-
-        ## This is where we need to map USER to the BOT Name
-        ## find the bot that is mapped to the user API.ID
-        # url = "http://121.137.95.97:8889/BotWithinUserList?botid=BOT002"
-        url = bot_mapping(API)
-        response = requests.get(url)
-        response = response.json()
-        # response
-
-        ## List of users in [2] followed by [1] index, spit out a list
-        get_users = list(response.items())[2][1]
-
-        num_users = len(get_users)
-        print("Number of Users : ", num_users)
-
-        for i in get_users:
-            print("User ID : ", i['userid'])
-            print("Access Key : ", i['apikey'])
-            print("Secret Key : ", i['securitykey'])
-            access_key = i['apikey']
-            secret_key = i['securitykey']
-
-            user_upbit = pyupbit.Upbit(access_key, secret_key)  # API 로그인 함수 호출
-            # KRW_balance = user_upbit.get_balance()
-                            
-            coin_balance = user_upbit.get_balance(ticker)
-            print(i['userid'], "ticker : ", ticker, "ticker Balance : ", coin_balance)
-            if coin_balance == None:
-                print("Coin Balance is None, cannot proceed")
-            else:
-                ## coin_balance가 None일때 exception 처리 필요
-                user_upbit.sell_market_order(ticker, coin_balance * fraction) ## Sell total_balance * fraction
-                # upbit.sell_market_order(ticker, coin_balance) ## Sell total_balance * fraction
-                
-                coin_balance_updated = user_upbit.get_balance(ticker)
-
-                print(i['userid'], "ticker : ", ticker, "new ticker Balance : ", coin_balance_updated)
-
-                ## Make WAS Request here
-
-
-    return None
-
-
-################################################################################################################################################################
-################################################################################################################################################################
-################################################################################################################################################################
-################################################################################################################################################################
-## Original PYUPBIT Functions #
 
 def get_tick_size(price, method="floor"):
     """원화마켓 주문 가격 단위 
@@ -353,17 +135,12 @@ def get_tick_size(price, method="floor"):
 
 
 
-
 class Upbit:
     def __init__(self, access, secret, cmt_ID=None):
-        ## Initialize an instance, 
         self.access = access
         self.secret = secret
         self.ID = cmt_ID
         print("User's Comathon Account : ", self.ID)
-        ## self.bot_id = bot_mapping
-        ## must continuously update the num_investors       
-
         code_status()
 
 
@@ -540,7 +317,7 @@ class Upbit:
             print(x.__class__.__name__)
             return None
 
-    # end region balance
+    # endregion balance
 
 
     #--------------------------------------------------------------------------
@@ -702,8 +479,8 @@ class Upbit:
             ## This is where we need to map USER to the BOT Name
 
             ## find the bot that is mapped to the user API.ID
-            #@ url = "http://121.137.95.97:8889/BotWithinUserList?botid=BOT002"
-            url = bot_mapping(self)
+            # url = "http://121.137.95.97:8889/BotWithinUserList?botid=BOT002"
+            url = bot_mapping(API)
             response = requests.get(url)
             response = response.json()
             # response
@@ -732,7 +509,7 @@ class Upbit:
 
         return None
 
-    ## Sell Function (CMT Function)
+
     def sell_market_order(self, ticker, fraction):
 
         ## API = Upbit API instance --> need it to map to the dedicated BOT
@@ -760,7 +537,7 @@ class Upbit:
             ## This is where we need to map USER to the BOT Name
             ## find the bot that is mapped to the user API.ID
             # url = "http://121.137.95.97:8889/BotWithinUserList?botid=BOT002"
-            url = bot_mapping(self)
+            url = bot_mapping(API)
             response = requests.get(url)
             response = response.json()
             # response
@@ -1079,7 +856,6 @@ if __name__ == "__main__":
     #balances = upbit.get_order("KRW-XRP")
     #pprint.pprint(balances)
 
-    # 주문 조회
     # order = upbit.get_order('50e184b3-9b4f-4bb0-9c03-30318e3ff10a')
     # print(order)
     # # 원화 잔고 조회
