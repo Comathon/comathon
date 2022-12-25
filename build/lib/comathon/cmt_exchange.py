@@ -379,6 +379,8 @@ class Upbit:
         
         if cmt_ID == None:
             print("**------- Note : No CMT_ID given, CMT_Upbit Instance is not mapped to any BOT ------- **")
+            self.botID = None
+            self.boturl = None
             pass
         else:
             self.botID = bot_mapping(self.userID)[-6:]
