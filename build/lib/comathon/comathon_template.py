@@ -35,3 +35,7 @@ cmt.sell_market_order(myAPI, "KRW-ATOM", 1)
 
 ##-------------------------------------------------------------
 
+
+while:
+
+    # check_profit(myAPI)

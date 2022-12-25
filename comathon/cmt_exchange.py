@@ -19,6 +19,12 @@ import datetime as dt
 from urllib.parse import urlencode
 from pyupbit.request_api import _send_get_request, _send_post_request, _send_delete_request
 
+#
+#--------------------------------------------------------------------------
+# Comathon Modules
+#--------------------------------------------------------------------------
+#     
+
 def code_status():
     ## Checks whether the code is being run by the server or by a personal computer
     is_server = False
@@ -59,10 +65,12 @@ def server_alive():
     
 
 
-def bot_mapping(API):
+def bot_mapping(userID):
     ## Finds the BOT that the user is mapped to, and returns the BOT address
+
     ## Bot List
     url = "http://121.137.95.97:8889/BotList"
+
     response = requests.get(url)
     response = response.json()
     # print(response)
@@ -76,27 +84,27 @@ def bot_mapping(API):
     get_bots
 
     num_bots = len(get_bots)
-    print("Number of active bots : ", num_bots)
-    print("my user ID is :", API.ID)
+    # print("Number of active bots : ", num_bots)
+    # print("my user ID is :", userID)
     bot_url_list = []
 
     for i in get_bots:
         save_ID = i['makerid']
         save_botid = i['botid']
 
-        print(save_ID, save_botid)
+        # print(save_ID, save_botid)
 
-        if save_ID == API.ID:
+        if save_ID == userID:
             bot_connect = save_botid
             # print("the user will be mapped to the bot : ", bot_connect)
             url = "http://121.137.95.97:8889/BotWithinUserList?botid=" + bot_connect
             # print(url)
             bot_url_list.append(url)
         else:
-            print("not this bot")
+            # print("not this bot")
             pass
 
-    print(bot_url_list[0])
+    # print(bot_url_list[0])
 
     return bot_url_list[0] ##Return the first item, as other items are only for test (should be mapped to only one bot)
 
@@ -156,13 +164,15 @@ def create_order_url(botid, userid, uuid, last_order):
         buyprice = last_order['trades'][0]['price'] ## 거래 가격
         buyvolume = last_order['trades'][0]['volume'] ## 총 거래량
         buyfee = last_order['paid_fee'] # 거래수수료
-        order_url = (f'{server}{was_item}?botid={botid}&userid={userid}&uuid={uuid}&created_at={created_at}&market={market}&side={side}&volume={volume}&price={price}&ord_type={ord_type}&sellprice={buyprice}&sellvolume={buyvolume}&sellfee={buyfee}')
+        order_url = (f'{server}{was_item}?botid={botid}&userid={userid}&uuid={uuid}&created_at={created_at}&market={market}&side={side}&volume={volume}&price={price}&ord_type={ord_type}&buyprice={buyprice}&buyvolume={buyvolume}&buyfee={buyfee}')
+        # order_url = (f'{server}{was_item}?botid={botid}&userid={userid}&uuid={uuid}&created_at={created_at}&market={market}&side={side}&volume={volume}&price={price}&ord_type={ord_type}&sellprice={buyprice}&sellvolume={buyvolume}&sellfee={buyfee}')
 
     elif side == 'ask': ## Sell
         sellprice = last_order['trades'][0]['price'] ## 거래 가격
         sellvolume = last_order['trades'][0]['volume'] ## 총 거래량
         sellfee = last_order['paid_fee'] # 거래수수료
-        order_url = (f'{server}{was_item}?botid={botid}&userid={userid}&uuid={uuid}&created_at={created_at}&market={market}&side={side}&volume={volume}&price={price}&ord_type={ord_type}&buyprice={buyprice}&buyvolume={buyvolume}&buyfee={buyfee}')
+        # order_url = (f'{server}{was_item}?botid={botid}&userid={userid}&uuid={uuid}&created_at={created_at}&market={market}&side={side}&volume={volume}&price={price}&ord_type={ord_type}&buyprice={buyprice}&buyvolume={buyvolume}&buyfee={buyfee}')
+        order_url = (f'{server}{was_item}?botid={botid}&userid={userid}&uuid={uuid}&created_at={created_at}&market={market}&side={side}&volume={volume}&price={price}&ord_type={ord_type}&sellprice={sellprice}&sellvolume={sellvolume}&sellfee={sellfee}')
 
     return order_url
 
@@ -188,7 +198,7 @@ def buy_market_order(API, ticker, amount):
 
         ## find the bot that is mapped to the user API.ID (e.g. test001)
         #@ url = "http://121.137.95.97:8889/BotWithinUserList?botid=BOT001"
-        url = bot_mapping(API)
+        url = API.boturl
         response = requests.get(url).json()        
         # response
 
@@ -206,7 +216,6 @@ def buy_market_order(API, ticker, amount):
             access_key = i['apikey']
             secret_key = i['securitykey']
             
-
             user_upbit = pyupbit.Upbit(access_key, secret_key)  # cmt과 다른 모듈이 필요
             
             KRW_balance = user_upbit.get_balance("KRW")
@@ -266,7 +275,7 @@ def sell_market_order(API, ticker, fraction):
         ## This is where we need to map USER to the BOT Name
         ## find the bot that is mapped to the user API.ID
         # url = "http://121.137.95.97:8889/BotWithinUserList?botid=BOT002"
-        url = bot_mapping(API)
+        url = API.boturl
         response = requests.get(url)
         response = response.json()
         # response
@@ -303,6 +312,13 @@ def sell_market_order(API, ticker, fraction):
                 ## Make WAS Request here
 
     return print("cmt sell function complete")
+
+
+#
+#--------------------------------------------------------------------------
+# Original Pyupbit Module
+#--------------------------------------------------------------------------
+#     
 
 def get_tick_size(price, method="floor"):
     """원화마켓 주문 가격 단위 
@@ -348,16 +364,31 @@ def get_tick_size(price, method="floor"):
     return tick_size
 
 
+#
+#--------------------------------------------------------------------------
+# CMT UpbitAPI Class
+#--------------------------------------------------------------------------
+#     
 
 
 class Upbit:
     def __init__(self, access, secret, cmt_ID=None):
         self.access = access
         self.secret = secret
-        self.ID = cmt_ID
-        print("User's Comathon Account : ", self.ID)
+        self.userID = cmt_ID
+        
+        if cmt_ID == None:
+            print("**------- Note : No CMT_ID given, CMT_Upbit Instance is not mapped to any BOT ------- **")
+            self.botID = None
+            self.boturl = None
+            pass
+        else:
+            self.botID = bot_mapping(self.userID)[-6:]
+            self.boturl = bot_mapping(self.userID)
+            print("User's Comathon Account : ", self.userID, ", is now mapped to :", self.botID)
+
         code_status()
-         ## self.bot_id = bot_mapping
+        
         ## must continuously update the num_investors  
 
 
@@ -697,7 +728,7 @@ class Upbit:
 
             ## find the bot that is mapped to the user API.ID
             # url = "http://121.137.95.97:8889/BotWithinUserList?botid=BOT002"
-            url = bot_mapping(API)
+            url = API.boturl
             response = requests.get(url)
             response = response.json()
             # response
@@ -754,7 +785,7 @@ class Upbit:
             ## This is where we need to map USER to the BOT Name
             ## find the bot that is mapped to the user API.ID
             # url = "http://121.137.95.97:8889/BotWithinUserList?botid=BOT002"
-            url = bot_mapping(API)
+            url = API.boturl
             response = requests.get(url)
             response = response.json()
             # response
@@ -1044,24 +1075,24 @@ class Upbit:
     #         return result[0]
 
 
-if __name__ == "__main__":
-    import pprint
+# if __name__ == "__main__":
+#     import pprint
 
-    #-------------------------------------------------------------------------
-    # api key
-    #-------------------------------------------------------------------------
-    with open("../upbit.key") as f:
-        lines = f.readlines()
-        access = lines[0].strip()
-        secret = lines[1].strip()
+#     #-------------------------------------------------------------------------
+#     # api key
+#     #-------------------------------------------------------------------------
+#     with open("../upbit.key") as f:
+#         lines = f.readlines()
+#         access = lines[0].strip()
+#         secret = lines[1].strip()
 
-    upbit = Upbit(access, secret)
-    #print(upbit.get_balances())
-    print(upbit.get_balance("KRW-BTC", verbose=True))
+#     upbit = Upbit(access, secret)
+#     #print(upbit.get_balances())
+#     print(upbit.get_balance("KRW-BTC", verbose=True))
 
-    # order 
-    resp = upbit.buy_limit_order("KRW-XRP", 500, 10)
-    print(resp)
+#     # order 
+#     resp = upbit.buy_limit_order("KRW-XRP", 500, 10)
+#     print(resp)
 
 
     #-------------------------------------------------------------------------

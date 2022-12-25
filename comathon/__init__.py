@@ -5,7 +5,7 @@ from .cmt_exchange import *
 from .cmt_quotation import *
 import socket
 
-print("Comathon Update 2022 12 14 00:45")
+print("Comathon Update 2022 12 25 10:39, BOT_MAPPING Modified")
 print("Comathon Module Imported, GAZUA")
 
 ## Check if the code is being run from the server of from the personal computer
