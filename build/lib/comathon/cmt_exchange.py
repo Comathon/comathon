@@ -37,23 +37,23 @@ def code_status():
     server_IP2 = '172.31.58.99'
     aws_IP = '43.201.123.167'
     dev_IP = '175.207.155.229'
-    home_IP = '121.142.61.184'
+    home_IP = '175.210.136.179'
     dev_IP_laptop = '192.168.213.94'
     # dev_IP_school = ''
 
     if my_IP == server_IP or my_IP == server_IP2 or my_IP == aws_IP or my_IP == dev_IP_laptop or my_IP == dev_IP or my_IP == home_IP:
-        print("The code is being run by the server or Jeong's computer")
+        print("The code is being run by the [server] or [Jeong's computer]")
         is_server = True
     
     else:
-        print("The code is being run on a personal computer")
+        print("The code is being run on a [personal computer]")
         print("is_server variable : ", is_server)
 
     return is_server
 
-def server_alive():
+def server_alive(API):
     ## Check if the server is online and running
-    url = "http://121.137.95.97:8889/Botalive?botid=Bot001"
+    url = "http://121.137.95.97:8889/botalive?botid=" + API.botID    
     response = requests.get(url).json()['ResCode'] 
 
     if response == "OK":
@@ -112,6 +112,7 @@ def bot_mapping(userID):
 def get_last_order(API, ticker):
     ## Look for the last order information for a given ticker (both cancel and done)
     ## Compare which one is the latest, return the UUID of the latest order
+    ## I need to first check if the transaction has occured successfully
 
     order_done = API.get_order(ticker, state="done", limit=1)
     order_cancel = API.get_order(ticker, state="cancel", limit = 1)
@@ -143,14 +144,14 @@ def get_last_order(API, ticker):
         return order_done[0]['uuid']
 
 
-def create_order_url(botid, userid, uuid, last_order):
+def create_order_url(botid, userid, last_order):
 
     ## I should pass API which should include  botID, userID
 
     server = "http://121.137.95.97:8889/" 
     was_item = "botorder" 
-    botid = "BOT001"
-    userid = "test001"
+    botid = botid
+    userid = userid
     uuid = last_order['uuid']
     created_at = last_order['created_at'][:-6].translate({ord(i): None for i in '-T:'}) ##Need to convert the time format to 'YYYYMMDDHHMMSS'
     # created_at = '2022 09 08 11 40 00' #YYYY MM DD HH MM SS
@@ -177,6 +178,12 @@ def create_order_url(botid, userid, uuid, last_order):
     return order_url
 
 ## Buy Function (CMT Function)
+
+def check_transaction_buy():
+
+    return None
+
+
 def buy_market_order(API, ticker, amount):
     ## API = Upbit API instance --> need it to map to the dedicated BOT
 
@@ -185,7 +192,7 @@ def buy_market_order(API, ticker, amount):
     
     ## If the code is being run on a PC, then proceed as normal
     if is_server == False:
-        print("is_server is False, hence buy only user's")
+        print("The code is running on a PC, hence buy only user's")
         KRW_balance = API.get_balance()
         print("Balance : ", KRW_balance)
         API.buy_market_order_single(ticker, amount) ## This needs separate treatment
@@ -193,7 +200,7 @@ def buy_market_order(API, ticker, amount):
 
     ## If the code is being run on the server
     else:
-        print("is_server is True, hence run through all the users in the server")
+        print("The code is running on the CMT Server, hence run through all the users in the server")
         ## This is where we need to map USER to the BOT Name
 
         ## find the bot that is mapped to the user API.ID (e.g. test001)
@@ -210,8 +217,8 @@ def buy_market_order(API, ticker, amount):
 
         for i in get_users:
             print("User ID : ", i['userid'])
-            print("Access Key : ", i['apikey'])
-            print("Secret Key : ", i['securitykey'])
+            # print("Access Key : ", i['apikey'])
+            # print("Secret Key : ", i['securitykey'])
             user_id = i['userid']
             access_key = i['apikey']
             secret_key = i['securitykey']
@@ -221,24 +228,40 @@ def buy_market_order(API, ticker, amount):
             KRW_balance = user_upbit.get_balance("KRW")
             print(i['userid'], "Balance : ", KRW_balance)
 
-            user_upbit.buy_market_order(ticker, amount)
-            print(i['userid'], "ticker : ", ticker, "Purchased Amount : ", amount)
+            check_transaction = user_upbit.buy_market_order(ticker, amount)
 
-            try:
-                ## Check if the order has been made or not 
-                uuid = get_last_order(user_upbit, ticker) ## cmt function, returns uuid
-                last_order = user_upbit.get_order(uuid) ##pyupbit function
-                # last_order
+            ## Check if the BUY order was executed, and record the transaction accordingly
+            if check_transaction is None:
 
-                ## if yes, then make WAS Request here
+                print("The BUY order failed, likely due to [under_min_total_market_bid] or [Insufficient_Balance] Error")
 
-                order_url = create_order_url(url[-6:], user_id, uuid, last_order)
-                response = requests.get(order_url).json()
-                print(response) 
+            elif check_transaction is not None:
 
-            except:
-                print("An exception has occured, probably the purchase was not made")
-                continue
+                if 'error' in check_transaction.keys():
+                    print("The BUY order failed, likely due to [Invalid_price_ask] error")
+
+                else: ## Transaction proceeded, record transaction
+                    print("BUY Transaction Complete, Record Transaction")
+                    print(i['userid'], "ticker : ", ticker, "Purchased Amount : ", amount)
+
+                    ## Record Transaction
+                    try:
+                        ## Check if the order has been made or not 
+                        # uuid = get_last_order(user_upbit, ticker) ## cmt function, returns uuid
+                        uuid = check_transaction['uuid']                        
+                        order_info = user_upbit.get_order(uuid) ##pyupbit function                        
+
+                        ## if yes, then make WAS Request here
+                        order_url = create_order_url(API.botID, user_id, order_info)
+                        response = requests.get(order_url).json()
+                        print(response) 
+
+                    except:
+                        print("An exception has occured, probably the BUY purchase was not made")
+                        continue
+
+            else:
+                print("None of the Condition Fits, Why? Did the BUY Transaction Proceed? Likely Not")
 
             ## if no, then find out why
             
@@ -254,9 +277,9 @@ def sell_market_order(API, ticker, fraction):
     print("Sell Function Activated")
     is_server = code_status()
 
-        ## If the code is being run on a PC, then proceed as normal
+    ## If the code is being run on a PC, then proceed as normal
     if is_server == False:
-        print("is_server is False, hence buy only user's")
+        print("The code is running on a PC, hence sell only user's")
         coin_balance = API.get_balance(ticker)
         print("ticker :", ticker, "ticker Balance : ", coin_balance)
         
@@ -264,13 +287,13 @@ def sell_market_order(API, ticker, fraction):
         if coin_balance == None:
             print("Coin Balance is None, cannot proceed")
         else:
-            print("not this bot")
+            # print("not this bot")
             API.sell_market_order_single(ticker, coin_balance * fraction) ## This may need separate treatment
             print("ticker : ", ticker, "Sold Amount : ", coin_balance * fraction)
 
     ## If the code is being run on the server
     else:
-        print("is_server is True, hence run through all the users in the server")
+        print("The code is running on the CMT Server, hence run through all the users in the server")
 
         ## This is where we need to map USER to the BOT Name
         ## find the bot that is mapped to the user API.ID
@@ -288,8 +311,9 @@ def sell_market_order(API, ticker, fraction):
 
         for i in get_users:
             print("User ID : ", i['userid'])
-            print("Access Key : ", i['apikey'])
-            print("Secret Key : ", i['securitykey'])
+            # print("Access Key : ", i['apikey'])
+            # print("Secret Key : ", i['securitykey'])
+            user_id = i['userid']
             access_key = i['apikey']
             secret_key = i['securitykey']
 
@@ -298,18 +322,44 @@ def sell_market_order(API, ticker, fraction):
                             
             coin_balance = user_upbit.get_balance(ticker)
             print(i['userid'], "ticker : ", ticker, "ticker Balance : ", coin_balance)
-            if coin_balance == None:
-                print("Coin Balance is None, cannot proceed")
-            else:
-                ## coin_balance가 None일때 exception 처리 필요
-                user_upbit.sell_market_order(ticker, coin_balance * fraction) ## Sell total_balance * fraction
-                # upbit.sell_market_order(ticker, coin_balance) ## Sell total_balance * fraction
+
+            #Excecute Sell Order
+            check_transaction = user_upbit.sell_market_order(ticker, coin_balance * fraction) ## Sell total_balance * fraction
+
+            ## Check if the sell order was executed, and record the transaction accordingly
+            if check_transaction is None:  
+                print("The order failed, likely due to [Insufficient_Coin_Balance] Error")
                 
-                coin_balance_updated = user_upbit.get_balance(ticker)
+            elif check_transaction is not None:
+                if 'error' in check_transaction.keys():
+                    print("The order failed, likely due to [under_min_total_market_ask] or [Invalid_volume_ask] error")
 
-                print(i['userid'], "ticker : ", ticker, "new ticker Balance : ", coin_balance_updated)
+                else:
+                    print("The sell order success, record transaction")
+                    coin_balance_updated = user_upbit.get_balance(ticker)
+                    print(i['userid'], "ticker : ", ticker, "new ticker Balance : ", coin_balance_updated)
 
-                ## Make WAS Request here
+                    ## Record Transaction                    
+                    try:
+                        ## Check if the order has been made or not 
+                        uuid = get_last_order(user_upbit, ticker) ## cmt function, returns uuid
+                        last_order = user_upbit.get_order(uuid) ##pyupbit function
+                        # last_order
+
+                        ## if yes, then make WAS Request here
+                        order_url = create_order_url(API.botID, user_id, last_order)
+                        response = requests.get(order_url).json()
+                        print(response) 
+
+                    except:
+                        print("An exception has occured, probably the purchase was not made")
+                        continue
+
+            else:
+                print('none of the condition fits, why?')
+
+           
+            
 
     return print("cmt sell function complete")
 

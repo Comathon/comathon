@@ -36,6 +36,12 @@ cmt.sell_market_order(myAPI, "KRW-ATOM", 1)
 ##-------------------------------------------------------------
 
 
-while:
+while True:
 
+    check_server = cmt.server_alive(myAPI)
+    print("Server Online : ", check_server)
+
+
+    for z in range(10 * 6): # n * 6 --> will pause for n minutes
+        time.sleep(10) #seconds
     # check_profit(myAPI)

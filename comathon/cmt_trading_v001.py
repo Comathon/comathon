@@ -9,7 +9,7 @@ import pandas as pd
 bot = telegram.Bot('859518036:AAGnIbbetS1Jx5cSNu9dNd-ymoKlqtXJcQo')
 access_key = '5uJbvx4hQwArlLbKdxzHjYGWVtEcEaeVKRCIvXXS'  # access key
 secret_key = 'jRkeAOYYYOg7sK8PCxG9AFrBKfP4voqVVYg2oyWI'  # secret key
-comathon_ID = "test001" #현재 test001, tst002, test003 가 등록되어 있음, 수정요청함
+comathon_ID = "test003" #현재 test001, tst002, test003 가 등록되어 있음, 수정요청함
 
 myAPI = cmt.Upbit(access_key, secret_key, comathon_ID)  # API 로그인 함수 호
 
@@ -360,7 +360,7 @@ while True:
         t1.join()
 
         if len(bal_ticker) > 0 and forced_sell == 1:
-            myAPI.sell_market_order(bal_ticker[0], 1)
+            cmt.sell_market_order(myAPI, bal_ticker[0], 1)
             bot.send_message('@chaesoone', '[SELL-forced] ' + bal_ticker[0])
             record_data(bal_ticker[0], 'SELL')
             forced_sell = 0
@@ -373,7 +373,7 @@ while True:
             if len(bal_ticker) > 0:
                 elapsed_day = get_retained_counts()
                 if elapsed_day >= ret_counts:
-                    myAPI.sell_market_order(bal_ticker[0], 1)
+                    cmt.sell_market_order(myAPI, bal_ticker[0], 1)
                     bot.send_message('@chaesoone', '[SELL-fail] ' + bal_ticker[0])
                     record_data(bal_ticker[0], 'SELL')
                     time.sleep(5)
@@ -384,7 +384,7 @@ while True:
                 get_buy_list()  # buy_list 재작성
                 if krw > 10000 and len(buy_list) != 0:
                     buy_amount = krw * 0.9995
-                    myAPI.buy_market_order(buy_ticker, buy_amount)
+                    cmt.buy_market_order(myAPI, buy_ticker, buy_amount)
                     bot.send_message('@chaesoone', '[BUY] ' + str(buy_ticker))
                     record_data(buy_ticker, 'BUY')
                     time.sleep(5)
@@ -404,7 +404,7 @@ while True:
             t2.join()
 
             if bids_profit >= target_profit and bids_1_size > bal_dict[bal_ticker[0]]:
-                myAPI.sell_market_order(bal_ticker[0], 1)
+                cmt.sell_market_order(myAPI, bal_ticker[0], 1)
                 bot.send_message('@chaesoone', '[SELL-success] ' + bal_ticker[0])
                 record_data(bal_ticker[0], 'SELL')
                 time.sleep(5)
