@@ -5,6 +5,7 @@ import numpy as np
 import time
 import datetime as dt
 import telegram #python-telegram-bot
+import asyncio
 import comathon as cmt
 import seaborn as sns
 import matplotlib as plt
@@ -95,7 +96,7 @@ chat_id = "@Comathon_coma" #김정 Open Channel
 chat_id2 = "1041595364" # 김정 kptib88_bot
 
 if activate_bot:
-    bot.sendMessage(chat_id, text =f"{bot_name} : Telegram Bot Activated")
+    asyncio.run(bot.sendMessage(chat_id, text =f"{bot_name} : Telegram Bot Activated"))
 
 
 ## Get my KRW balance (defensive programming)
@@ -105,13 +106,13 @@ while True:
 
         if KRW_balance is None:
             print("UPBIT API Error while executing get_balance() function")
-            time.sleep(0.1)
+            time.sleep(1)
             pass
         else:
             break
     except:
         print("UPBIT API Error while executing get_balance() function")
-        time.sleep(0.1)
+        time.sleep(1)
         pass
 
 KRW_balance
@@ -126,14 +127,16 @@ msg_update = ("This code will trade the following tickers", ticker_list)
 print(msg_update)
 
 if activate_bot:
-    bot.sendMessage(chat_id, text = msg_update)      
+    pass
+    # asyncio.run(bot.sendMessage(chat_id, text = msg_update))      
 
 
 msg_update = (f"Code Initiated at {dt.datetime.today().strftime('%Y-%m-%d-%HH-%MM')}, GAZUA! \n")
 print(msg_update)
 
 if activate_bot:
-    bot.sendMessage(chat_id, text = msg_update)      
+    pass
+    # asyncio.run(bot.sendMessage(chat_id, text = msg_update))      
 
 i = -1
 while True:
@@ -232,7 +235,8 @@ while True:
             print(msg_update)
 
             if activate_bot:
-                bot.sendMessage(chat_id, text = msg_update)       
+                pass
+                # asyncio.run(bot.sendMessage(chat_id, text = msg_update))       
 
         elif GC == 0 and DC == 1:
 
@@ -269,7 +273,8 @@ while True:
                 print(msg_update)
 
                 if activate_bot:
-                    bot.sendMessage(chat_id, text = msg_update)              
+                    pass
+                    # asyncio.run(bot.sendMessage(chat_id, text = msg_update))              
         else:
             print('No Signal detected #2')        
 
