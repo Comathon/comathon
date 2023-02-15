@@ -5,7 +5,7 @@ from .cmt_exchange import *
 from .cmt_quotation import *
 import socket
 
-print("Comathon Update 2023 01 13 21:47, Version 0.0.41")
+print("Comathon Update 2023 02 15 14:01, Version 0.0.42")
 print("Comathon Module Imported, GAZUA")
 
 code_status()

@@ -16,6 +16,7 @@ import socket
 import requests
 import time
 import datetime as dt
+import telegram
 from urllib.parse import urlencode
 from pyupbit.request_api import _send_get_request, _send_post_request, _send_delete_request
 
@@ -37,11 +38,13 @@ def code_status():
     server_IP2 = '172.31.58.99'
     aws_IP = '43.201.123.167'
     dev_IP = '175.207.155.229'
+    office_IP = "117.16.196.170"
+    office_IP2 = "10.80.89.65"
     home_IP = '175.210.136.179'
     dev_IP_laptop = '192.168.213.94'
     # dev_IP_school = ''
 
-    if my_IP == server_IP or my_IP == server_IP2 or my_IP == aws_IP or my_IP == dev_IP_laptop or my_IP == dev_IP or my_IP == home_IP:
+    if my_IP == server_IP or my_IP == server_IP2 or my_IP == aws_IP or my_IP == dev_IP_laptop or my_IP == dev_IP or my_IP == home_IP or my_IP == office_IP or my_IP == office_IP2:
         print("The code is being run by the [server] or [Jeong's computer]")
         is_server = True
     

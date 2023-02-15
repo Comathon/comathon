@@ -81,3 +81,5 @@ wincertstore==0.2
 yarg==0.1.9
 zipp @ file:///C:/ci/zipp_1652273994994/work
 zope.interface==5.4.0
+python-telegram-bot
+seaborn

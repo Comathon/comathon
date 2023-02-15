@@ -2,3 +2,5 @@ requests==2.28.1
 pandas
 numpy
 pyupbit
+python-telegram-bot
+seaborn
