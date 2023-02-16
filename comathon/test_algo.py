@@ -11,7 +11,8 @@ import seaborn as sns
 import matplotlib as plt
 import requests
 
-## test
+## Last Updated 2023/02/16
+print("test_algo.py last updated in 2023/02/16")
 
 ## 추가로 작성해서 사용하는 function들 
 def load_telegram():
