@@ -92,7 +92,7 @@ myAPI = cmt.Upbit(access_key, secret_key, comathon_ID)  # API 로그인 함수 �
 
 ## Load Telegram Bot (텔레그램  메세지 연결 모듈)
 bot_name = 'Piglet' #Coma or Piglet
-bot = load_telegram()
+# bot = load_telegram()
 
 activate_bot = True
 
@@ -100,7 +100,8 @@ chat_id = "@Comathon_coma" #김정 Open Channel
 chat_id2 = "1041595364" # 김정 kptib88_bot
 
 if activate_bot:
-    asyncio.run(bot.sendMessage(chat_id, text =f"{bot_name} : Telegram Bot Activated"))
+    pass
+    # asyncio.run(bot.sendMessage(chat_id, text =f"{bot_name} : Telegram Bot Activated"))
 
 
 ## Get my KRW balance (defensive programming)
