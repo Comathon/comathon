@@ -9,8 +9,8 @@ import requests
 
 
 ###### Create UPBIT API Class Instance (업로드 시 삭제) ######
-access_key = "PBJJMdbWmo1r58HTbiwDMfoYjft1f49Mb7KYlpTZ"
-secret_key = "nkN6sMNqUE7rj0WfLIjnY9XCXx5yCfQFvwCcuD3c"
+access_key = "JtlBajxwDFdxOwhWRgKyfZln8xNZg8LO9vqJCFeh"
+secret_key = "UpzBFbU02j9x0cPoC6ttEjpxvorj3f3s9getl6iO"
 comathon_ID = "test002"
 
 ## myAPI = cmt.Upbit(access_key, secret_key)  # API 로그인 함수 호출

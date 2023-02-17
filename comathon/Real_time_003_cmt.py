@@ -189,11 +189,13 @@ l1_1min = 0
 ret_msg = 0
 avg_slippage = 0
 
+index = 0
+
 while True:
+
+
     try:
-        now = datetime.datetime.now()
-        check_server = cmt.server_alive(myAPI)
-        print("Server Online : ", check_server)
+        now = datetime.datetime.now()        
 
         if len(bal_ticker) == 0:
             if len(scr_list) > 0:
@@ -242,7 +244,8 @@ while True:
                             break
                         else:
                             print(i, now)
-                            pass
+                            break
+                        break
                 if scr_list_start_time < now < scr_list_stop_time:
                     bot.send_message('@chaesoone', 'Market closed')
                     scr_list = []
@@ -326,6 +329,13 @@ while True:
         elif stop_time_msg < now:
             start_time_msg = start_time_msg + datetime.timedelta(hours=next_t)
             stop_time_msg = stop_time_msg + datetime.timedelta(hours=next_t)
+
+        index = index + 1
+
+        if index % 100 == 0:
+            check_server = cmt.server_alive(myAPI)
+            print("Server Online : ", check_server)
+            print("GAZUA, index = ", index)
 
     except:
         # print('Main Roof Error', now)
