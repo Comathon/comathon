@@ -2,6 +2,12 @@ import random
 import comathon as cmt
 import time, datetime
 
+print("Test")
+print("Test")
+print("Test")
+print("Test")
+
+
 access_key = '5uJbvx4hQwArlLbKdxzHjYGWVtEcEaeVKRCIvXXS'  # access key
 secret_key = 'jRkeAOYYYOg7sK8PCxG9AFrBKfP4voqVVYg2oyWI'  # secret key
 comathon_ID = "test003" #현재 test001, tst002, test003 가 등록되어 있음, 수정요청함
@@ -109,9 +115,10 @@ while True: # 시간 조정
 index = 0
 
 # 테스트
-test_def = get_scr_list()
-print(test_def)
-
+# get_coin_bal()
+# print(bal_ticker)
+# avg_price = myAPI.get_avg_buy_price(bal_ticker[0])
+# print(avg_price)
 
 while True:
 
@@ -162,6 +169,8 @@ while True:
             check_server = cmt.server_alive(myAPI)
             print("Server Online : ", check_server)
             print("GAZUA, index = ", index)
+
+        time.sleep(5)
 
     except:
         # print('Main Roof Error', now)
