@@ -34,6 +34,7 @@ def code_status():
     print("my IP address : ", my_IP)
 
     ## 디버깅을 위해서 각자의 IP주소를 여기에 추가할 필요가 있음
+    don_IP = '112'
     server_IP = '121.137.95.97'
     server_IP2 = '172.31.58.99'
     aws_IP = '43.201.123.167'

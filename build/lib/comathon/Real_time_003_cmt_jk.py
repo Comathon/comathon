@@ -1,8 +1,8 @@
 import comathon as cmt
-import time, datetime, telegram
+import time, datetime
 import pandas as pd
 
-bot = telegram.Bot('859518036:AAGnIbbetS1Jx5cSNu9dNd-ymoKlqtXJcQo')
+# bot = telegram.Bot('859518036:AAGnIbbetS1Jx5cSNu9dNd-ymoKlqtXJcQo')
 
 access_key = '5uJbvx4hQwArlLbKdxzHjYGWVtEcEaeVKRCIvXXS'  # access key
 secret_key = 'jRkeAOYYYOg7sK8PCxG9AFrBKfP4voqVVYg2oyWI'  # secret key
@@ -237,8 +237,8 @@ while True:
                             buy_amount = krw * 0.9995
                             bal_ticker.append(i)
                             buy_price.append(c0_t)
-                            myAPI.buy_market_order(i, buy_amount)
-                            bot.send_message('@chaesoone', '[BUY] ' + str(i) + ' at ' + str(c0_t))
+                            cmt.buy_market_order(myAPI, i, buy_amount)
+                            # bot.send_message('@chaesoone', '[BUY] ' + str(i) + ' at ' + str(c0_t))
                             time.sleep(60)
                             avg_price = myAPI.get_avg_buy_price(i)
                             break
@@ -247,7 +247,7 @@ while True:
                             break
                         break
                 if scr_list_start_time < now < scr_list_stop_time:
-                    bot.send_message('@chaesoone', 'Market closed')
+                    # bot.send_message('@chaesoone', 'Market closed')
                     scr_list = []
                     scr_list_start_time = scr_list_start_time + datetime.timedelta(hours=24)
                     scr_list_stop_time = scr_list_start_time + datetime.timedelta(minutes=5)
@@ -258,7 +258,7 @@ while True:
             elif len(scr_list) == 0:
                 if start_time_get_scr_list < now < stop_time_get_scr_list:
                     get_scr_list()
-                    bot.send_message('@chaesoone', 'Market started')
+                    # bot.send_message('@chaesoone', 'Market started')
                     start_time_get_scr_list = start_time_get_scr_list + datetime.timedelta(hours=24)
                     stop_time_get_scr_list = start_time_get_scr_list + datetime.timedelta(minutes=5)
                 elif stop_time_get_scr_list < now:
@@ -279,26 +279,26 @@ while True:
                     pass
 
             if now_price < l1_1min:
-                myAPI.sell_market_order(bal_ticker[0], 1)
+                cmt.sell_market_order(myAPI, bal_ticker[0], 1)
                 time.sleep(3)
 
 
                 krw = get_krw_bal()
                 r_profit = (krw/ini_bal-1) * 100
-                bot.send_message('@chaesoone', '[SELL] ' + bal_ticker[0]  + ' at ' + str(now_price)
-                                 + ' (' + format(profit, '3.2f') + '%' + ')')
+                # bot.send_message('@chaesoone', '[SELL] ' + bal_ticker[0]  + ' at ' + str(now_price)
+                                #  + ' (' + format(profit, '3.2f') + '%' + ')')
                 get_scr_list()
                 bal_ticker = []
                 buy_price = []
 
             elif end_position_start_time < now < end_position_stop_time:
-                myAPI.sell_market_order(bal_ticker[0], 1)
+                cmt.sell_market_order(myAPI, bal_ticker[0], 1)
                 time.sleep(3)
 
                 krw = get_krw_bal()
                 r_profit = (krw/ini_bal-1) * 100
 
-                bot.send_message('@chaesoone', '[SELL2] ' + bal_ticker[0] + ' (' + format(profit, '3.2f') + '%' + ')')
+                # bot.send_message('@chaesoone', '[SELL2] ' + bal_ticker[0] + ' (' + format(profit, '3.2f') + '%' + ')')
                 get_scr_list()
                 bal_ticker = []
                 buy_price = []
@@ -319,10 +319,10 @@ while True:
             krw = get_krw_bal()
             r_profit = (krw/ini_bal-1) * 100
 
-            bot.send_message('@chaesoone', '[UPBIT] Real-time Trading Report\n' + 'Initiated on ' + start_date + '\n' +
-                             '\nReal profit is ' + format(r_profit, '3.2f') + '%' +
-                             '\nAvg. slippage is ' + format(avg_slippage, '3.2f') + '%' +
-                             '\nRetained item is ' + ret_msg)
+            # bot.send_message('@chaesoone', '[UPBIT] Real-time Trading Report\n' + 'Initiated on ' + start_date + '\n' +
+            #                  '\nReal profit is ' + format(r_profit, '3.2f') + '%' +
+            #                  '\nAvg. slippage is ' + format(avg_slippage, '3.2f') + '%' +
+            #                  '\nRetained item is ' + ret_msg)
 
             start_time_msg = start_time_msg + datetime.timedelta(hours=next_t)
             stop_time_msg = stop_time_msg + datetime.timedelta(hours=next_t)
