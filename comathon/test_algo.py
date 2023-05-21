@@ -84,7 +84,7 @@ def make_plot(df):
 ## Connect Upbit API (개인 컴퓨터에서 기초개발할때만 사용, 서버에서 돌릴땐 comathon module 사용)
 access_key = "DplIC0dHKeVVjr9RtRhJskZD2xVTkxdQtHno6BpO"
 secret_key = "6xV4OlFjLv7P8PoHyuOrRgE1Qk1kmnEfB8Mmzmh4"
-comathon_ID = 'test001'
+comathon_ID = 'kptib88@gmail.com'
 
 myAPI = cmt.Upbit(access_key, secret_key, comathon_ID)  # API 로그인 함수 호출
 # myAPI #myAPI 라는 UPBIT와 연계된 class instance가 생성됨

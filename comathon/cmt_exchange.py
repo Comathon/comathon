@@ -33,7 +33,7 @@ def code_status():
     my_IP = socket.gethostbyname(socket.gethostname())
     print("my IP address : ", my_IP)
 
-
+    ## 디버깅을 위해서 각자의 IP주소를 여기에 추가할 필요가 있음
     server_IP = '121.137.95.97'
     server_IP2 = '172.31.58.99'
     aws_IP = '43.201.123.167'
@@ -422,7 +422,6 @@ def get_tick_size(price, method="floor"):
 # CMT UpbitAPI Class
 #--------------------------------------------------------------------------
 #     
-
 
 class Upbit:
     def __init__(self, access, secret, cmt_ID=None):
