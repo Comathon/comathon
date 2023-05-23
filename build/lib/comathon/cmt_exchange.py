@@ -34,7 +34,6 @@ def code_status():
     print("my IP address : ", my_IP)
 
     ## 디버깅을 위해서 각자의 IP주소를 여기에 추가할 필요가 있음
-    don_IP = '112'
     server_IP = '121.137.95.97'
     server_IP2 = '172.31.58.99'
     aws_IP = '43.201.123.167'
@@ -68,7 +67,7 @@ def server_alive(API):
     return server_alive
     
 
-
+## Now OBSOLETE (userID is the botID now)
 def bot_mapping(userID):
     ## Finds the BOT that the user is mapped to, and returns the BOT address
 
@@ -428,7 +427,7 @@ class Upbit:
     def __init__(self, access, secret, cmt_ID=None):
         self.access = access
         self.secret = secret
-        self.userID = cmt_ID
+        self.userID = cmt_ID ## This is the same as the botID now
         
         if cmt_ID == None:
             print("**------- Note : No CMT_ID given, CMT_Upbit Instance is not mapped to any BOT ------- **")
@@ -436,8 +435,8 @@ class Upbit:
             self.boturl = None
             pass
         else:
-            self.botID = bot_mapping(self.userID)[-6:]
-            self.boturl = bot_mapping(self.userID)
+            self.botID = cmt_ID
+            self.boturl = "http://121.137.95.97:8889/BotWithinUserList?botid=" + cmt_ID
             print("User's Comathon Account : ", self.userID, ", is now mapped to :", self.botID)
 
         code_status()
